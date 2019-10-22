@@ -37,6 +37,7 @@ jobs:
     - uses: actions/download-artifact@master
       with:
         name: dependencies
+        path: vendor
 
     - name: Run test suite
       run: vendor/bin/phpunit
