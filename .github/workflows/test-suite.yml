@@ -1,0 +1,29 @@
+name: Twine Test Suite
+
+on: [push]
+
+jobs:
+  install-dependencies:
+    name: Install Dependencies
+
+    runs-on: ubuntu-latest
+    container: composer:1.9
+
+    steps:
+    - uses: actions/checkout@v1
+
+    - name: Validate composer.json and composer.lock
+      run: composer validate
+
+    - name: Install PHP dependencies
+      run: composer install --prefer-dist --no-progress --no-suggest
+  
+  run-tests:
+    name: Run Test Suite
+    
+    runs-on: ubuntu-latest
+    container: php:7.3-cli
+
+    steps:
+    - name: Run test suite
+      run: vendor/bin/phpunit
