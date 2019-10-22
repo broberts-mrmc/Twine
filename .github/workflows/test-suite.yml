@@ -17,6 +17,11 @@ jobs:
 
     - name: Install PHP dependencies
       run: composer install --prefer-dist --no-progress --no-suggest
+
+    - uses: actions/upload-artifact@master
+      with:
+        name: dependencies
+        path: vendor
   
   run-tests:
     name: Run Test Suite
@@ -27,5 +32,11 @@ jobs:
     needs: install-dependencies
 
     steps:
+    - uses: actions/checkout@v1
+
+    - uses: actions/download-artifact@master
+      with:
+        name: dependencies
+
     - name: Run test suite
       run: vendor/bin/phpunit
