@@ -3,11 +3,10 @@ name: Twine Test Suite
 on: [push]
 
 jobs:
-  install-dependencies:
-    name: Install Dependencies
+  run-tests:
+    name: Run Test Suite
 
     runs-on: ubuntu-latest
-    container: composer:1.9
 
     steps:
     - uses: actions/checkout@v1
@@ -17,35 +16,6 @@ jobs:
 
     - name: Install PHP dependencies
       run: composer install --prefer-dist --no-progress --no-suggest
-
-    - name: Compress Dependencies
-      run: tar -czvf vendor.tar.gz vendor
-
-    - name: Upload Artifacts
-      uses: actions/upload-artifact@master
-      with:
-        name: dependencies
-        path: vendor.tar.gz
-  
-  run-tests:
-    name: Run Test Suite
-    
-    runs-on: ubuntu-latest
-    container: php:7.3-cli
-
-    needs: install-dependencies
-
-    steps:
-    - uses: actions/checkout@v1
-
-    - name: Download Artifacts
-      uses: actions/download-artifact@master
-      with:
-        name: dependencies
-        path: vendor.tar.gz
-    
-    - name: Extract Dependencies
-      run: tar -xzvf vendor.tar.gz
 
     - name: Run test suite
       run: vendor/bin/phpunit
