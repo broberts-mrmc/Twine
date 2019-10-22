@@ -3,21 +3,8 @@ name: Twine Test Suite
 on: [push]
 
 jobs:
-  coding-standards:
-    name: Coding Standards
-
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v1
-
-      - name: Verify coding standards
-        run: vendor/bin/php-cs-fixer fix --dry-run --using-cache=no
-
-  run-tests:
-    name: Test Suite
-
+  install-dependencies:
+    name: Install dependencies
     runs-on: ubuntu-latest
 
     steps:
@@ -30,5 +17,44 @@ jobs:
     - name: Install PHP dependencies
       run: composer install --prefer-dist --no-progress --no-suggest
 
+    - name: Upload artifacts
+      uses: actions/upload-artifact@master
+      with:
+        name: dependencies
+        path: vendor
+
+  run-tests:
+    name: Test Suite
+    runs-on: ubuntu-latest
+    needs: install-dependencies
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v1
+
+    - name: Download artifacts
+      uses: actions/download-artifact@master
+      with:
+        name: dependencies
+        path: vendor
+
     - name: Run test suite
       run: vendor/bin/phpunit
+
+  coding-standards:
+    name: Coding Standards
+    runs-on: ubuntu-latest
+    needs: install-dependencies
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v1
+
+      - name: Download artifacts
+        uses: actions/download-artifact@master
+        with:
+          name: dependencies
+          path: vendor
+
+      - name: Verify coding standards
+        run: vendor/bin/php-cs-fixer fix --dry-run --using-cache=no
