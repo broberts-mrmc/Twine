@@ -18,10 +18,14 @@ jobs:
     - name: Install PHP dependencies
       run: composer install --prefer-dist --no-progress --no-suggest
 
-    - uses: actions/upload-artifact@master
+    - name: Compress Dependencies
+      run: tar -czvf vendor.tar.gz vendor
+
+    - name: Upload Artifacts
+      uses: actions/upload-artifact@master
       with:
         name: dependencies
-        path: vendor
+        path: vendor.tar.gz
   
   run-tests:
     name: Run Test Suite
@@ -34,10 +38,14 @@ jobs:
     steps:
     - uses: actions/checkout@v1
 
-    - uses: actions/download-artifact@master
+    - name: Download Artifacts
+      uses: actions/download-artifact@master
       with:
         name: dependencies
-        path: vendor
+        path: vendor.tar.gz
+    
+    - name: Extract Dependencies
+      run: tar -xzvf vendor.tar.gz
 
     - name: Run test suite
       run: vendor/bin/phpunit
