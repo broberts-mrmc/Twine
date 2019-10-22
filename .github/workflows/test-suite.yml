@@ -10,7 +10,7 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: ubuntu-latest
+        uses: actions/checkout@v1
 
       - name: Verify coding standards
         run: vendor/bin/php-cs-fixer fix --dry-run --using-cache=no
