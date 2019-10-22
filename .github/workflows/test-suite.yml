@@ -24,6 +24,8 @@ jobs:
     runs-on: ubuntu-latest
     container: php:7.3-cli
 
+    needs: install-dependencies
+
     steps:
     - name: Run test suite
       run: vendor/bin/phpunit
