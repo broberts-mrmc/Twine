@@ -3,6 +3,18 @@ name: Twine Test Suite
 on: [push]
 
 jobs:
+  coding-standards:
+    name: Coding Standards
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: ubuntu-latest
+
+      - name: Verify coding standards
+        run: vendor/bin/php-cs-fixer fix --dry-run --using-cache=no
+
   run-tests:
     name: Run Test Suite
 
