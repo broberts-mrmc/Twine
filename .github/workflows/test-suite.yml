@@ -39,7 +39,7 @@ jobs:
         path: vendor
 
     - name: Run test suite
-      run: vendor/bin/phpunit
+      run: chmod +x vendor/bin/* && vendor/bin/phpunit
 
   coding-standards:
     name: Coding Standards
@@ -57,4 +57,4 @@ jobs:
           path: vendor
 
       - name: Verify coding standards
-        run: vendor/bin/php-cs-fixer fix --dry-run --using-cache=no
+        run: chmod vendor/bin/* & vendor/bin/php-cs-fixer fix --dry-run --using-cache=no
